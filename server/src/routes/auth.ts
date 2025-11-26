@@ -66,7 +66,6 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
             id: user._id,
             name: user.name,
             email: user.email,
-            password: user.password,
             createdAt: user.createdAt
         };
 
@@ -109,8 +108,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
             return;
         }
 
-
-        const isPasswordValid = password === user.password;
+        const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
             res.status(401).json({
                 success: false,
@@ -125,7 +123,6 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
             id: user._id,
             name: user.name,
             email: user.email,
-            password: user.password,
             createdAt: user.createdAt
         };
 
@@ -159,7 +156,6 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
             id: user._id,
             name: user.name,
             email: user.email,
-            password: user.password,
             createdAt: user.createdAt
         };
 

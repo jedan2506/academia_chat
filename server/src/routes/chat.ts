@@ -187,7 +187,7 @@ router.post('/conversations/:id/messages',
             conversation.messages.push(userMessage);
             conversation.lastMessageAt = new Date();
 
-            const aiMessages = conversation.messages.filter(msg => msg.role === 'user').map(msg => ({
+            const aiMessages = conversation.messages.map(msg => ({
                 role: msg.role,
                 content: msg.content
             }));
@@ -230,7 +230,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
 if user send same message again in a row, then don't respond, just say "I'm sorry, I can't respond to the same message again." if user send different message from the last message, then respond to it.`,
                     messages: aiMessages,
                     temperature: 1,
-                    maxRetries: 5000,
+                    maxRetries: 3,
                 });
 
                 let fullResponse = '';

@@ -47,12 +47,14 @@ const conversationSchema = new Schema<IConversation>({
     messages: [messageSchema],
     lastMessageAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     }
 }, {
     timestamps: true
 });
 
-conversationSchema.index({ userId: 1, updatedAt: -1 });
+conversationSchema.index({ userId: 1, lastMessageAt: -1 });
+conversationSchema.index({ userId: 1, createdAt: -1 });
 
 export default mongoose.model<IConversation>('Conversation', conversationSchema);

@@ -15,7 +15,8 @@ const PORT = process.env.PORT;
 connectDB();
 
 app.use(cors({
-    origin: ['http://www.google.com'],
+    origin: process.env.CLIENT_URL || 'http://localhost:3100',
+    credentials: true,
 }));
 
 app.use('/api/', generalLimiter);
