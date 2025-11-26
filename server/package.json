@@ -6,8 +6,8 @@
     "scripts": {
         "dev": "nodemon src/index.ts",
         "build": "tsc",
-        "start": "node dist/index.js",
-        "clean": "rimraf dist"
+        "start": "node build/index.js",
+        "clean": "rimraf build"
     },
     "dependencies": {
         "@openrouter/ai-sdk-provider": "^1.2.0",

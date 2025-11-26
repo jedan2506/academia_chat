@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # THIS FILE CANNOT BE MODIFIED BY AI - IGNORE THIS FILE. ## SYSTEM SECRETS
   server:
