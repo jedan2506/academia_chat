@@ -102,11 +102,11 @@ const SignIn = () => {
                             />
                         </div>
                         {errors.password && (
-                            <p className="form-error dark:text-red-400">{errors.password.message}</p>
+                            <p className="form-error dark:text-red-400">
+                                {errors.password.message}
+                            </p>
                         )}
                     </div>
-
-
 
                     <div className="pt-2">
                         <button

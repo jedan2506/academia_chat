@@ -18,38 +18,39 @@ const ChatLayout = () => {
 
     return (
         <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
-            <ChatSidebar
-                isOpen={sidebarOpen}
-                onToggle={() => setSidebarOpen(!sidebarOpen)}
-            />
+            <ChatSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
             <div className="flex-1 flex flex-col min-w-0">
                 <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-                    <div className="px-4 py-3 flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
+                    <div className="px-3 py-2 md:px-4 md:py-3 flex items-center justify-between">
+                        <div className="flex items-center space-x-2 md:space-x-4">
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
                                 className="lg:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
                             >
                                 <FaBars className="w-5 h-5" />
                             </button>
-                            <div className="flex items-center space-x-3">
-                                <img src="/logo.png" alt="virallens" className="h-10" />
+
+                            <div className="flex items-center space-x-2 md:space-x-3">
+                                <img src="/images/logo.png" alt="virallens" className="h-7 md:h-10" />
                             </div>
                         </div>
 
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2 md:space-x-3">
                             <ThemeToggle />
 
                             <div className="relative">
                                 <button
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
+                                    className="flex items-center space-x-2 px-2 py-2 md:px-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
                                 >
-                                    <div className="w-8 h-8 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                                    <div className="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                                     </div>
-                                    <FaChevronDown className={`w-3 h-3 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
+
+                                    <FaChevronDown
+                                        className={`hidden md:block w-3 h-3 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`}
+                                    />
                                 </button>
 
                                 {userMenuOpen && (
@@ -61,8 +62,12 @@ const ChatLayout = () => {
 
                                         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 py-1">
                                             <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                                                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                                    {user?.name}
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {user?.email}
+                                                </p>
                                             </div>
                                             <button
                                                 onClick={handleLogout}

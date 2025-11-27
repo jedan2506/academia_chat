@@ -134,7 +134,9 @@ const SignUp = () => {
                             />
                         </div>
                         {errors.password && (
-                            <p className="form-error dark:text-red-400">{errors.password.message}</p>
+                            <p className="form-error dark:text-red-400">
+                                {errors.password.message}
+                            </p>
                         )}
                     </div>
 
@@ -159,7 +161,9 @@ const SignUp = () => {
                             />
                         </div>
                         {errors.confirmPassword && (
-                            <p className="form-error dark:text-red-400">{errors.confirmPassword.message}</p>
+                            <p className="form-error dark:text-red-400">
+                                {errors.confirmPassword.message}
+                            </p>
                         )}
                     </div>
 

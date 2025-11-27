@@ -4,6 +4,7 @@ import { chatApi } from '../utils/chatApi';
 import { Conversation, Message } from '../types/chat';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
+import { messageRole } from '../constants/chat';
 
 const Chat = () => {
     const { conversationId } = useParams<{ conversationId: string }>();
@@ -56,7 +57,7 @@ const Chat = () => {
         setStreamingMessage('');
 
         const newUserMessage: Message = {
-            role: 'user',
+            role: messageRole.user,
             content: userMessage,
             timestamp: new Date().toISOString()
         };
@@ -84,7 +85,7 @@ const Chat = () => {
             }
 
             const aiMessage: Message = {
-                role: 'assistant',
+                role: messageRole.assistant,
                 content: fullResponse,
                 timestamp: new Date().toISOString()
             };
@@ -153,9 +154,7 @@ const Chat = () => {
 
     return (
         <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
-
-
-            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 md:space-y-6">
                 {conversation.messages.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center max-w-md mx-auto">
@@ -170,29 +169,29 @@ const Chat = () => {
                     conversation.messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            className={`flex ${msg.role === messageRole.user ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`flex ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[80%]`}>
-                                <div className={`hidden md:flex flex-shrink-0 w-8 h-8 rounded-full items-center justify-center text-sm font-medium ${msg.role === 'user'
+                            <div className={`flex ${msg.role === messageRole.user ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[80%]`}>
+                                <div className={`hidden md:flex flex-shrink-0 w-8 h-8 rounded-full items-center justify-center text-sm font-medium ${msg.role === messageRole.user
                                     ? 'bg-gray-800 dark:bg-gray-700 text-white'
                                     : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200'
                                     }`}>
-                                    {msg.role === 'user' ? getUserInitials() : 'AI'}
+                                    {msg.role === messageRole.user ? getUserInitials() : 'AI'}
                                 </div>
 
                                 <div className="flex-1">
-                                    <div className={`md:hidden text-xs font-medium mb-1 ${msg.role === 'user' ? 'text-right text-gray-600 dark:text-gray-400' : 'text-left text-gray-600 dark:text-gray-400'}`}>
-                                        {msg.role === 'user' ? user?.name || 'You' : 'AI Assistant'}
+                                    <div className={`md:hidden text-xs font-medium mb-1 ${msg.role === messageRole.user ? 'text-right text-gray-600 dark:text-gray-400' : 'text-left text-gray-600 dark:text-gray-400'}`}>
+                                        {msg.role === messageRole.user ? user?.name || 'You' : 'AI Assistant'}
                                     </div>
                                     
-                                    <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user'
+                                    <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === messageRole.user
                                         ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
                                         : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
                                         }`}>
                                         <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                                             {msg.content}
                                         </div>
-                                        <div className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
+                                        <div className={`text-xs mt-2 ${msg.role === messageRole.user ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
                                             }`}>
                                             {formatTimestamp(msg.timestamp)}
                                         </div>
@@ -249,7 +248,7 @@ const Chat = () => {
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4 shadow-lg">
+            <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-3 md:px-6 md:py-4 shadow-lg">
                 <form onSubmit={handleSendMessage} className="flex items-end space-x-3">
                     <textarea
                         ref={textareaRef}

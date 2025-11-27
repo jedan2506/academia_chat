@@ -21,15 +21,19 @@ const Navbar: React.FC = () => {
                             <div className="bg-primary-600 text-white p-1.5 md:p-2 rounded-lg">
                                 <FaBuilding className="w-4 h-4 md:w-6 md:h-6" />
                             </div>
-                            <span className="ml-2 text-lg md:text-xl font-bold text-gray-900 dark:text-white">virallens</span>
+                            <span className="ml-2 text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+                                virallens
+                            </span>
                         </div>
                     </div>
 
                     <div className="flex items-center space-x-3 md:space-x-4">
                         <ThemeToggle />
-                        
+
                         <div className="hidden md:block">
-                            <span className="text-gray-700 dark:text-gray-300">Welcome, {user?.name}</span>
+                            <span className="text-gray-700 dark:text-gray-300">
+                                Welcome, {user?.name}
+                            </span>
                         </div>
 
                         <div className="relative">
@@ -49,7 +53,9 @@ const Navbar: React.FC = () => {
                                     <div className="py-1">
                                         <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700">
                                             <div className="font-medium">{user?.name}</div>
-                                            <div className="text-gray-500 dark:text-gray-400">{user?.email}</div>
+                                            <div className="text-gray-500 dark:text-gray-400">
+                                                {user?.email}
+                                            </div>
                                         </div>
                                         <a
                                             href="#"

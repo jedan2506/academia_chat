@@ -37,7 +37,7 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
         if (!errors.isEmpty()) {
             res.status(400).json({
                 success: false,
-                message: validationMessages.validationFailed,
+                message: errorMessages.validationFailed,
                 errors: errors.array()
             });
             return;
@@ -94,7 +94,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
         if (!errors.isEmpty()) {
             res.status(400).json({
                 success: false,
-                message: validationMessages.validationFailed,
+                message: errorMessages.validationFailed,
                 errors: errors.array()
             });
             return;

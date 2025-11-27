@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import api from '../utils/api';
-import { theme, Theme, defaultTheme, themeStorageKey, themeClass } from '../constants/theme';
+import { theme, Theme, defaultTheme, themeClass } from '../constants/theme';
 
 interface ThemeContextType {
     theme: Theme;
@@ -23,10 +23,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-    const [currentTheme, setThemeState] = useState<Theme>(() => {
-        const stored = localStorage.getItem(themeStorageKey);
-        return (stored === theme.dark || stored === theme.light) ? stored : defaultTheme;
-    });
+    const [currentTheme, setThemeState] = useState<Theme>(defaultTheme);
 
     useEffect(() => {
         const root = document.documentElement;
@@ -35,29 +32,45 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         } else {
             root.classList.remove(themeClass);
         }
-        localStorage.setItem(themeStorageKey, currentTheme);
     }, [currentTheme]);
 
-    const setTheme = (newTheme: Theme) => {
-        setThemeState(newTheme);
-        const token = localStorage.getItem('token');
-        if (token) {
-            api.patch('/auth/theme', { theme: newTheme })
-                .then(() => {
-                    const userStr = localStorage.getItem('user');
-                    if (userStr) {
-                        const user = JSON.parse(userStr);
-                        user.theme = newTheme;
-                        localStorage.setItem('user', JSON.stringify(user));
-                    }
-                })
-                .catch(console.error);
-        }
-    };
+    const setTheme = useCallback((newTheme: Theme) => {
+        console.log('[ThemeContext] setTheme called with:', newTheme);
+        console.trace('[ThemeContext] Call stack');
+        setThemeState((prevTheme) => {
+            console.log('[ThemeContext] prevTheme:', prevTheme, 'newTheme:', newTheme);
+            if (newTheme === prevTheme) {
+                console.log('[ThemeContext] Theme unchanged, returning prevTheme');
+                return prevTheme;
+            }
+            const token = localStorage.getItem('token');
+            if (token) {
+                console.log('[ThemeContext] 🔥 CALLING API to update theme to:', newTheme);
+                api.patch('/auth/theme', { theme: newTheme })
+                    .then(() => {
+                        console.log('[ThemeContext] ✅ API call succeeded');
+                        const userStr = localStorage.getItem('user');
+                        if (userStr) {
+                            const user = JSON.parse(userStr);
+                            user.theme = newTheme;
+                            localStorage.setItem('user', JSON.stringify(user));
+                            console.log('[ThemeContext] 📢 Dispatching userThemeUpdated event');
+                            window.dispatchEvent(new CustomEvent('userThemeUpdated', { detail: { theme: newTheme } }));
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('[ThemeContext] ❌ API call failed:', error);
+                    });
+            } else {
+                console.log('[ThemeContext] No token, skipping API call');
+            }
+            return newTheme;
+        });
+    }, []);
 
-    const toggleTheme = () => {
+    const toggleTheme = useCallback(() => {
         setTheme(currentTheme === theme.light ? theme.dark : theme.light);
-    };
+    }, [currentTheme, setTheme]);
 
     return (
         <ThemeContext.Provider value={{ theme: currentTheme, toggleTheme, setTheme }}>
@@ -65,4 +78,3 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         </ThemeContext.Provider>
     );
 };
-

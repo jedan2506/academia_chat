@@ -1,4 +1,3 @@
-
 import SEOHead from '@/components/SEOHead';
 
 const ChatWelcome = () => {
@@ -12,12 +11,20 @@ const ChatWelcome = () => {
             />
             <div className="h-full flex items-center justify-center bg-white dark:bg-gray-900">
                 <div className="text-center max-w-md mx-auto p-8">
-                    <div className="text-6xl mb-6" role="img" aria-label="Robot emoji representing AI assistant">🤖</div>
+                    <div
+                        className="text-6xl mb-6"
+                        role="img"
+                        aria-label="Robot emoji representing AI assistant"
+                    >
+                        🤖
+                    </div>
                     <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
                         Welcome to Virallens <br /> Marketing Bot
                     </h1>
                     <p className="text-gray-600 dark:text-gray-300 mb-6">
-                        I'm your dedicated AI marketing expert, ready to help solve any marketing challenges you face. Ask me anything about marketing strategies, campaigns, analytics, or best practices to grow your business!
+                        I'm your dedicated AI marketing expert, ready to help solve any marketing
+                        challenges you face. Ask me anything about marketing strategies, campaigns,
+                        analytics, or best practices to grow your business!
                     </p>
                     <div className="hidden">
                         <h2>AI-Powered Marketing Assistant Features:</h2>

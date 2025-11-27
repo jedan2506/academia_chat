@@ -18,7 +18,7 @@ const validateRequest = (req: express.Request, res: express.Response, next: expr
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            message: validationMessages.validationFailed,
+            message: errorMessages.validationFailed,
             errors: errors.array()
         });
     }
@@ -197,7 +197,7 @@ router.post('/conversations/:id/messages',
             }
 
             const userMessage = {
-                role: messageRole.user as const,
+                role: messageRole.user,
                 content: message.trim(),
                 timestamp: new Date()
             };
@@ -208,9 +208,9 @@ router.post('/conversations/:id/messages',
             const aiMessages = conversation.messages
                 .filter(msg => msg.content && msg.content.trim())
                 .map(msg => ({
-                    role: msg.role,
+                role: msg.role,
                     content: msg.content.trim()
-                }));
+            }));
 
             res.setHeader('Content-Type', 'text/plain');
             res.setHeader('Cache-Control', 'no-cache');
@@ -258,16 +258,16 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 }
 
                 if (fullResponse.trim()) {
-                    const aiMessage = {
-                        role: messageRole.assistant as const,
+                const aiMessage = {
+                        role: messageRole.assistant,
                         content: fullResponse.trim(),
-                        timestamp: new Date()
-                    };
+                    timestamp: new Date()
+                };
 
-                    conversation.messages.push(aiMessage);
-                    conversation.lastMessageAt = new Date();
+                conversation.messages.push(aiMessage);
+                conversation.lastMessageAt = new Date();
 
-                    await conversation.save();
+                await conversation.save();
                 }
 
                 await invalidateUserCache(req.user.id);
@@ -279,7 +279,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 res.write(errorMessage);
                 
                 const aiMessage = {
-                    role: messageRole.assistant as const,
+                    role: messageRole.assistant,
                     content: errorMessage,
                     timestamp: new Date()
                 };
