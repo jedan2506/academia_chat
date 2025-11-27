@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import ChatSidebar from '../components/ChatSidebar';
+import ThemeToggle from '../components/ThemeToggle';
 import { useAuth } from '../context/AuthContext';
 import { FaBars, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
 
@@ -16,19 +17,19 @@ const ChatLayout = () => {
     };
 
     return (
-        <div className="h-screen flex bg-gray-50">
+        <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
             <ChatSidebar
                 isOpen={sidebarOpen}
                 onToggle={() => setSidebarOpen(!sidebarOpen)}
             />
 
             <div className="flex-1 flex flex-col min-w-0">
-                <header className="bg-white border-b border-gray-200 shadow-sm">
+                <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
                     <div className="px-4 py-3 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
+                                className="lg:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
                             >
                                 <FaBars className="w-5 h-5" />
                             </button>
@@ -38,12 +39,12 @@ const ChatLayout = () => {
                         </div>
 
                         <div className="flex items-center space-x-3">
-
+                            <ThemeToggle />
 
                             <div className="relative">
                                 <button
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
+                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-20"
                                 >
                                     <div className="w-8 h-8 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                                         {user?.name?.charAt(0).toUpperCase() || 'U'}
@@ -58,14 +59,14 @@ const ChatLayout = () => {
                                             onClick={() => setUserMenuOpen(false)}
                                         />
 
-                                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1">
-                                            <div className="px-4 py-2 border-b border-gray-100">
-                                                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                                                <p className="text-xs text-gray-500">{user?.email}</p>
+                                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 py-1">
+                                            <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
+                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                                             </div>
                                             <button
                                                 onClick={handleLogout}
-                                                className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                                className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                             >
                                                 <FaSignOutAlt className="w-4 h-4" />
                                                 <span>Sign Out</span>

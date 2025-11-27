@@ -19,7 +19,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         <div className="min-h-screen bg-gray-100 flex p-2">
             <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
                 <div className="mx-auto w-full max-w-sm lg:max-w-md">
-                    <div className="text-left mb-8">
+                    <div className="mb-8">
                         <h2 className="text-3xl font-bold text-gray-900 mb-2">
                             {title}
                         </h2>
@@ -47,8 +47,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
                                 Welcome to the Future of Marketing with virallens
                             </h3>
                             <p className="text-xl opacity-90 leading-relaxed">
-
-                                Performance marketing and AI video solutions built exclusively for school and college marketers.                            </p>
+                                Performance marketing and AI video solutions built exclusively for school and college marketers.
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
+    theme: 'light' | 'dark';
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
@@ -28,6 +29,11 @@ const userSchema = new Schema<IUser>({
         required: true,
         select: false
     },
+    theme: {
+        type: String,
+        enum: ['light', 'dark'],
+        default: 'light'
+    }
 }, {
     timestamps: true
 });

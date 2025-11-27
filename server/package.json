@@ -2,7 +2,7 @@
     "name": "virallens-backend",
     "version": "1.0.0",
     "description": "Backend API with JWT authentication",
-    "main": "dist/index.js",
+    "main": "build/index.js",
     "scripts": {
         "dev": "nodemon src/index.ts",
         "build": "tsc",

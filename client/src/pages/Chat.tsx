@@ -126,7 +126,7 @@ const Chat = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-full bg-gray-50">
+            <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900">
                 <LoadingSpinner />
             </div>
         );
@@ -134,29 +134,29 @@ const Chat = () => {
 
     if (!conversation) {
         return (
-            <div className="flex items-center justify-center h-full bg-gray-50">
+            <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900">
                 <div className="text-center">
-                    <div className="text-gray-400 text-6xl mb-4">⚠️</div>
-                    <div className="text-gray-600 text-lg font-medium">Conversation not found</div>
-                    <p className="text-gray-500 text-sm mt-2">This conversation may have been deleted or doesn't exist.</p>
+                    <div className="text-gray-400 dark:text-gray-500 text-6xl mb-4">⚠️</div>
+                    <div className="text-gray-600 dark:text-gray-300 text-lg font-medium">Conversation not found</div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">This conversation may have been deleted or doesn't exist.</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-full bg-gray-50">
+        <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
 
 
             <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
                 {conversation.messages.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center max-w-md mx-auto">
-                            <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+                            <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                                 <span className="text-3xl">💬</span>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-800 mb-2">Start the conversation</h3>
-                            <p className="text-gray-600">Send a message to begin chatting with the marketing assistant.</p>
+                            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Start the conversation</h3>
+                            <p className="text-gray-600 dark:text-gray-400">Send a message to begin chatting with the marketing assistant.</p>
                         </div>
                     </div>
                 ) : (
@@ -167,20 +167,20 @@ const Chat = () => {
                         >
                             <div className={`flex ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start space-x-3 max-w-[80%]`}>
                                 <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${msg.role === 'user'
-                                    ? 'bg-gray-800 text-white ml-3'
-                                    : 'bg-gray-300 text-gray-700 mr-3'
+                                    ? 'bg-gray-800 dark:bg-gray-700 text-white ml-3'
+                                    : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 mr-3'
                                     }`}>
                                     {msg.role === 'user' ? 'U' : 'AI'}
                                 </div>
 
                                 <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user'
-                                    ? 'bg-gray-800 text-white rounded-br-md'
-                                    : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md'
+                                    ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
+                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
                                     }`}>
                                     <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                                         {msg.content}
                                     </div>
-                                    <div className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300' : 'text-gray-500'
+                                    <div className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
                                         }`}>
                                         {formatTimestamp(msg.timestamp)}
                                     </div>
@@ -193,13 +193,13 @@ const Chat = () => {
                 {isStreaming && streamingMessage && (
                     <div className="flex justify-start">
                         <div className="flex items-start space-x-3 max-w-[80%]">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-sm font-medium mr-3">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center text-sm font-medium mr-3">
                                 AI
                             </div>
-                            <div className="bg-white text-gray-900 border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                            <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                                 <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                                     {streamingMessage}
-                                    <span className="inline-block w-0.5 h-4 bg-gray-600 ml-1 animate-pulse" />
+                                    <span className="inline-block w-0.5 h-4 bg-gray-600 dark:bg-gray-400 ml-1 animate-pulse" />
                                 </div>
                             </div>
                         </div>
@@ -209,14 +209,14 @@ const Chat = () => {
                 {isStreaming && !streamingMessage && (
                     <div className="flex justify-start">
                         <div className="flex items-start space-x-3">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-sm font-medium mr-3">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center text-sm font-medium mr-3">
                                 AI
                             </div>
-                            <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                                 <div className="flex items-center space-x-1">
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                                 </div>
                             </div>
                         </div>
@@ -226,7 +226,7 @@ const Chat = () => {
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
+            <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4 shadow-lg">
                 <form onSubmit={handleSendMessage} className="flex items-end space-x-3">
                     <textarea
                         ref={textareaRef}
@@ -237,14 +237,14 @@ const Chat = () => {
                         }}
                         onKeyDown={handleKeyDown}
                         placeholder="Type your message..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent resize-none min-h-[44px] max-h-[120px] text-sm bg-gray-50 hover:bg-white transition-colors duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent resize-none min-h-[44px] max-h-[120px] text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-white dark:hover:bg-gray-600 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
                         disabled={isStreaming}
                         rows={1}
                     />
                     <button
                         type="submit"
                         disabled={!message.trim() || isStreaming}
-                        className="px-6 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm h-[44px]"
+                        className="px-6 py-3 bg-gray-800 dark:bg-gray-700 text-white rounded-xl hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm h-[44px]"
                     >
                         {isStreaming ? (
                             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
