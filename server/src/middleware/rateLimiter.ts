@@ -1,7 +1,7 @@
 import { rateLimit } from 'express-rate-limit';
 
 export const generalLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
+    windowMs: 1 * 60 * 1000,
     max: 100,
     message: {
         success: false,
@@ -15,7 +15,7 @@ export const generalLimiter = rateLimit({
 });
 
 export const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 15 * 60 * 1000,
     max: 10,
     message: {
         success: false,
@@ -29,7 +29,7 @@ export const authLimiter = rateLimit({
 });
 
 export const chatLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
+    windowMs: 1 * 60 * 1000,
     max: 50,
     message: {
         success: false,
@@ -43,7 +43,7 @@ export const chatLimiter = rateLimit({
 });
 
 export const strictLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
+    windowMs: 60 * 60 * 1000,
     max: 10,
     message: {
         success: false,
@@ -57,7 +57,7 @@ export const strictLimiter = rateLimit({
 });
 
 export const createAccountLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
+    windowMs: 60 * 60 * 1000,
     max: 3,
     message: {
         success: false,
