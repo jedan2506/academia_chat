@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import api from '../utils/api';
-
-type Theme = 'light' | 'dark';
+import { THEME, Theme, DEFAULT_THEME, THEME_STORAGE_KEY, THEME_CLASS } from '../constants/theme';
 
 interface ThemeContextType {
     theme: Theme;
@@ -25,18 +24,18 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const [theme, setThemeState] = useState<Theme>(() => {
-        const stored = localStorage.getItem('theme');
-        return (stored === 'dark' || stored === 'light') ? stored : 'light';
+        const stored = localStorage.getItem(THEME_STORAGE_KEY);
+        return (stored === THEME.DARK || stored === THEME.LIGHT) ? stored : DEFAULT_THEME;
     });
 
     useEffect(() => {
         const root = document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
+        if (theme === THEME.DARK) {
+            root.classList.add(THEME_CLASS);
         } else {
-            root.classList.remove('dark');
+            root.classList.remove(THEME_CLASS);
         }
-        localStorage.setItem('theme', theme);
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
     }, [theme]);
 
     const setTheme = (newTheme: Theme) => {
@@ -57,7 +56,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
 
     const toggleTheme = () => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
+        setTheme(theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT);
     };
 
     return (

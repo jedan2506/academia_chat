@@ -6,6 +6,9 @@ import { cacheMiddleware, invalidateUserCache } from '../middleware/cache';
 import Conversation from '../models/Conversation';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { streamText } from 'ai';
+import { MESSAGE_ROLE } from '../constants/chat';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES, VALIDATION_MESSAGES } from '../constants/messages';
+import { CACHE_TTL } from '../constants/cache';
 
 const router = express.Router();
 const openrouter = createOpenRouter({
@@ -15,17 +18,17 @@ const validateRequest = (req: express.Request, res: express.Response, next: expr
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            message: 'Validation failed',
+            message: ERROR_MESSAGES.VALIDATION_FAILED,
             errors: errors.array()
         });
     }
     next();
 };
 
-router.get('/conversations', authenticateToken, cacheMiddleware(300), async (req: Request, res: Response) => {
+router.get('/conversations', authenticateToken, cacheMiddleware(CACHE_TTL.CONVERSATIONS_LIST), async (req: Request, res: Response) => {
     try {
         if (!req.user) {
-            return res.status(401).json({ message: 'User not authenticated' });
+            return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
         }
 
         const conversations = await Conversation.find({ userId: req.user.id })
@@ -36,19 +39,19 @@ router.get('/conversations', authenticateToken, cacheMiddleware(300), async (req
         res.json(conversations);
     } catch (error) {
         console.error('Error fetching conversations:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
     }
 });
 
 router.get('/conversations/:id',
     authenticateToken,
-    param('id').isMongoId().withMessage('Invalid conversation ID'),
+    param('id').isMongoId().withMessage(VALIDATION_MESSAGES.INVALID_CONVERSATION_ID),
     validateRequest,
-    cacheMiddleware(600),
+    cacheMiddleware(CACHE_TTL.SINGLE_CONVERSATION),
     async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({ message: 'User not authenticated' });
+                return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
             }
 
             const conversation = await Conversation.findOne({
@@ -57,13 +60,13 @@ router.get('/conversations/:id',
             }).lean();
 
             if (!conversation) {
-                return res.status(404).json({ message: 'Conversation not found' });
+                return res.status(404).json({ message: ERROR_MESSAGES.CONVERSATION_NOT_FOUND });
             }
 
             res.json(conversation);
         } catch (error) {
             console.error('Error fetching conversation:', error);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
         }
     }
 );
@@ -73,12 +76,12 @@ router.post('/conversations',
     body('title')
         .trim()
         .notEmpty()
-        .withMessage('Title cannot be empty'),
+        .withMessage(VALIDATION_MESSAGES.TITLE_REQUIRED),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({ message: 'User not authenticated' });
+                return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
             }
 
             const { title } = req.body;
@@ -95,23 +98,23 @@ router.post('/conversations',
             res.status(201).json(conversation);
         } catch (error) {
             console.error('Error creating conversation:', error);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
         }
     }
 );
 
 router.put('/conversations/:id',
     authenticateToken,
-    param('id').isMongoId().withMessage('Invalid conversation ID'),
+    param('id').isMongoId().withMessage(VALIDATION_MESSAGES.INVALID_CONVERSATION_ID),
     body('title')
         .trim()
         .notEmpty()
-        .withMessage('Title cannot be empty'),
+        .withMessage(VALIDATION_MESSAGES.TITLE_REQUIRED),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({ message: 'User not authenticated' });
+                return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
             }
 
             const { title } = req.body;
@@ -123,7 +126,7 @@ router.put('/conversations/:id',
             );
 
             if (!conversation) {
-                return res.status(404).json({ message: 'Conversation not found' });
+                return res.status(404).json({ message: ERROR_MESSAGES.CONVERSATION_NOT_FOUND });
             }
 
             await invalidateUserCache(req.user.id);
@@ -131,7 +134,7 @@ router.put('/conversations/:id',
             res.json(conversation);
         } catch (error) {
             console.error('Error updating conversation:', error);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
         }
     }
 );
@@ -139,12 +142,12 @@ router.put('/conversations/:id',
 router.delete('/conversations/:id',
     strictLimiter,
     authenticateToken,
-    param('id').isMongoId().withMessage('Invalid conversation ID'),
+    param('id').isMongoId().withMessage(VALIDATION_MESSAGES.INVALID_CONVERSATION_ID),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({ message: 'User not authenticated' });
+                return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
             }
 
             const conversation = await Conversation.findOneAndDelete({
@@ -153,15 +156,15 @@ router.delete('/conversations/:id',
             });
 
             if (!conversation) {
-                return res.status(404).json({ message: 'Conversation not found' });
+                return res.status(404).json({ message: ERROR_MESSAGES.CONVERSATION_NOT_FOUND });
             }
 
             await invalidateUserCache(req.user.id);
 
-            res.json({ message: 'Conversation deleted successfully' });
+            res.json({ message: SUCCESS_MESSAGES.CONVERSATION_DELETED });
         } catch (error) {
             console.error('Error deleting conversation:', error);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
         }
     }
 );
@@ -169,16 +172,16 @@ router.delete('/conversations/:id',
 router.post('/conversations/:id/messages',
     chatLimiter,
     authenticateToken,
-    param('id').isMongoId().withMessage('Invalid conversation ID'),
+    param('id').isMongoId().withMessage(VALIDATION_MESSAGES.INVALID_CONVERSATION_ID),
     body('message')
         .trim()
         .notEmpty()
-        .withMessage('Message cannot be empty'),
+        .withMessage(VALIDATION_MESSAGES.MESSAGE_REQUIRED),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({ message: 'User not authenticated' });
+                return res.status(401).json({ message: ERROR_MESSAGES.USER_NOT_AUTHENTICATED });
             }
 
             const { message } = req.body;
@@ -190,11 +193,11 @@ router.post('/conversations/:id/messages',
             });
 
             if (!conversation) {
-                return res.status(404).json({ message: 'Conversation not found' });
+                return res.status(404).json({ message: ERROR_MESSAGES.CONVERSATION_NOT_FOUND });
             }
 
             const userMessage = {
-                role: 'user' as const,
+                role: MESSAGE_ROLE.USER as const,
                 content: message.trim(),
                 timestamp: new Date()
             };
@@ -256,7 +259,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
 
                 if (fullResponse.trim()) {
                     const aiMessage = {
-                        role: 'assistant' as const,
+                        role: MESSAGE_ROLE.ASSISTANT as const,
                         content: fullResponse.trim(),
                         timestamp: new Date()
                     };
@@ -276,7 +279,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 res.write(errorMessage);
                 
                 const aiMessage = {
-                    role: 'assistant' as const,
+                    role: MESSAGE_ROLE.ASSISTANT as const,
                     content: errorMessage,
                     timestamp: new Date()
                 };
@@ -292,7 +295,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
 
         } catch (error) {
             console.error('Error processing message:', error);
-            res.status(500).json({ message: 'Server error' });
+            res.status(500).json({ message: ERROR_MESSAGES.SERVER_ERROR });
         }
     }
 );
