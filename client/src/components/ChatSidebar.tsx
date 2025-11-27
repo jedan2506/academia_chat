@@ -18,7 +18,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
     const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
-        loadConversations();
+        loadConversations().then();
     }, []);
 
     const loadConversations = async () => {
@@ -93,17 +93,17 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
             )}
 
             <div className={`
-                fixed inset-y-0 left-0 z-50 w-80 bg-gray-50 border-r border-gray-200 transform transition-transform duration-300 ease-in-out shadow-lg
+                fixed inset-y-0 left-0 z-50 w-80 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out shadow-lg
                 lg:relative lg:translate-x-0 lg:z-0 lg:shadow-none
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 <div className="flex flex-col h-full">
-                    <div className="p-6 border-b border-gray-200 bg-white">
+                    <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-bold text-gray-900">Conversations</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Conversations</h2>
                             <button
                                 onClick={onToggle}
-                                className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-30"
+                                className="lg:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-30"
                             >
                                 <FaTimes className="w-5 h-5" />
                             </button>
@@ -112,7 +112,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                         <button
                             onClick={handleNewConversation}
                             disabled={isCreating}
-                            className="w-full px-4 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-200 font-medium shadow-sm"
+                            className="w-full px-4 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-200 font-medium shadow-sm"
                         >
                             {isCreating ? (
                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -131,12 +131,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                                 <LoadingSpinner />
                             </div>
                         ) : conversations.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
+                            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                     <span className="text-2xl">💬</span>
                                 </div>
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">No conversations yet</h3>
-                                <p className="text-sm text-gray-500">Create your first chat to get started!</p>
+                                <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">No conversations yet</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Create your first chat to get started!</p>
                             </div>
                         ) : (
                             <div className="space-y-2">
@@ -152,8 +152,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                                         className={`
                                             block p-4 rounded-xl transition-all duration-200 group relative
                                             ${conversationId === conv._id
-                                                ? 'bg-gray-800 text-white shadow-md'
-                                                : 'bg-white hover:bg-gray-100 border border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                                                ? 'bg-gray-800 dark:bg-gray-700 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:shadow-sm'
                                             }
                                         `}
                                     >
@@ -161,13 +161,13 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                                             <div className="flex-1 min-w-0 pr-3">
                                                 <h3 className={`
                                                     text-sm font-semibold truncate leading-5
-                                                    ${conversationId === conv._id ? 'text-white' : 'text-gray-900'}
+                                                    ${conversationId === conv._id ? 'text-white' : 'text-gray-900 dark:text-white'}
                                                 `}>
                                                     {conv.title}
                                                 </h3>
                                                 <p className={`
                                                     text-xs mt-2 font-medium
-                                                    ${conversationId === conv._id ? 'text-gray-300' : 'text-gray-500'}
+                                                    ${conversationId === conv._id ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'}
                                                 `}>
                                                     {formatDate(conv.lastMessageAt)}
                                                 </p>
@@ -178,8 +178,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                                                 className={`
                                                     opacity-0 group-hover:opacity-100 p-2 rounded-lg transition-all duration-200
                                                     ${conversationId === conv._id
-                                                        ? 'text-gray-300 hover:text-white hover:bg-gray-700'
-                                                        : 'text-gray-400 hover:text-gray-600 hover:bg-gray-200'
+                                                        ? 'text-gray-300 hover:text-white hover:bg-gray-700 dark:hover:bg-gray-600'
+                                                        : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                                                     }
                                                 `}
                                                 title="Delete conversation"

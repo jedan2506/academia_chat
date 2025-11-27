@@ -2,7 +2,7 @@ import { rateLimit } from 'express-rate-limit';
 
 export const generalLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 30,
+    max: 100,
     message: {
         success: false,
         message: 'Too many requests from this IP, please try again later.',
@@ -30,7 +30,7 @@ export const authLimiter = rateLimit({
 
 export const chatLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 30,
+    max: 50,
     message: {
         success: false,
         message: 'Too many messages sent, please slow down.',

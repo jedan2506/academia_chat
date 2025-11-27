@@ -1,0 +1,15 @@
+node_modules
+.env
+.env.local
+.env*.local
+build
+dist
+.git
+.DS_Store
+*.log
+coverage
+.vscode
+.idea
+Dockerfile
+.dockerignore
+

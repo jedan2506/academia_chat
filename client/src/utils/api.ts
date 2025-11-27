@@ -61,6 +61,14 @@ const api = {
         });
     },
 
+    patch(endpoint: string, data: any, options: RequestInit = {}) {
+        return this.request(endpoint, {
+            ...options,
+            method: 'PATCH',
+            body: JSON.stringify(data),
+        });
+    },
+
     delete(endpoint: string, options: RequestInit = {}) {
         return this.request(endpoint, { ...options, method: 'DELETE' });
     },

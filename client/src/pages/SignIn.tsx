@@ -53,12 +53,12 @@ const SignIn = () => {
             >
                 <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
-                        <label htmlFor="email" className="form-label">
+                        <label htmlFor="email" className="form-label dark:text-gray-200">
                             Email address
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaEnvelope className="h-5 w-5 text-gray-400" />
+                                <FaEnvelope className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('email', {
@@ -70,22 +70,22 @@ const SignIn = () => {
                                 })}
                                 type="email"
                                 autoComplete="email"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your email address"
                             />
                         </div>
                         {errors.email && (
-                            <p className="form-error">{errors.email.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.email.message}</p>
                         )}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password" className="form-label">
+                        <label htmlFor="password" className="form-label dark:text-gray-200">
                             Password
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaLock className="h-5 w-5 text-gray-400" />
+                                <FaLock className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('password', {
@@ -97,12 +97,12 @@ const SignIn = () => {
                                 })}
                                 type="password"
                                 autoComplete="current-password"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your password"
                             />
                         </div>
                         {errors.password && (
-                            <p className="form-error">{errors.password.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.password.message}</p>
                         )}
                     </div>
 
@@ -112,7 +112,7 @@ const SignIn = () => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="btn btn-primary w-full"
+                            className="btn btn-primary w-full dark:bg-primary-600 dark:hover:bg-primary-700"
                         >
                             {isSubmitting ? (
                                 <div className="flex items-center justify-center">
@@ -128,12 +128,12 @@ const SignIn = () => {
                         </button>
                     </div>
 
-                    <div className="text-center pt-3 border-t border-gray-200">
-                        <span className="text-sm text-gray-600">
+                    <div className="text-center pt-3 border-t border-gray-200 dark:border-gray-600">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             Don't have an account?{' '}
                             <Link
                                 to="/signup"
-                                className="font-semibold text-gray-800 hover:text-gray-900 transition-colors underline underline-offset-2"
+                                className="font-semibold text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors underline underline-offset-2"
                             >
                                 Sign up
                             </Link>

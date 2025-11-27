@@ -45,6 +45,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      no_cache: true
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:5100/api}
     container_name: virallens-client

@@ -66,6 +66,7 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
             id: user._id,
             name: user.name,
             email: user.email,
+            theme: user.theme || 'light',
             createdAt: user.createdAt
         };
 
@@ -123,6 +124,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
             id: user._id,
             name: user.name,
             email: user.email,
+            theme: user.theme || 'light',
             createdAt: user.createdAt
         };
 
@@ -156,6 +158,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
             id: user._id,
             name: user.name,
             email: user.email,
+            theme: user.theme || 'light',
             createdAt: user.createdAt
         };
 
@@ -178,6 +181,54 @@ router.post('/logout', authenticateToken, (req: Request, res: Response): void =>
         success: true,
         message: 'Logout successful'
     });
+});
+
+router.patch('/theme', authenticateToken, async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.user;
+        if (!user) {
+            res.status(401).json({
+                success: false,
+                message: 'User not found'
+            });
+            return;
+        }
+
+        const { theme } = req.body;
+
+        if (!theme || !['light', 'dark'].includes(theme)) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid theme. Must be "light" or "dark"'
+            });
+            return;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            user._id,
+            { theme },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+            return;
+        }
+
+        res.json({
+            success: true,
+            theme: updatedUser.theme
+        });
+    } catch (error) {
+        console.error('Update theme error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
 });
 
 export default router;

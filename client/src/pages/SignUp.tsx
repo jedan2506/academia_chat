@@ -54,12 +54,12 @@ const SignUp = () => {
             >
                 <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
-                        <label htmlFor="name" className="form-label">
+                        <label htmlFor="name" className="form-label dark:text-gray-200">
                             Full Name
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaUser className="h-5 w-5 text-gray-400" />
+                                <FaUser className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('name', {
@@ -75,22 +75,22 @@ const SignUp = () => {
                                 })}
                                 type="text"
                                 autoComplete="name"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your full name"
                             />
                         </div>
                         {errors.name && (
-                            <p className="form-error">{errors.name.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.name.message}</p>
                         )}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="email" className="form-label">
+                        <label htmlFor="email" className="form-label dark:text-gray-200">
                             Email address
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaEnvelope className="h-5 w-5 text-gray-400" />
+                                <FaEnvelope className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('email', {
@@ -102,22 +102,22 @@ const SignUp = () => {
                                 })}
                                 type="email"
                                 autoComplete="email"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your email address"
                             />
                         </div>
                         {errors.email && (
-                            <p className="form-error">{errors.email.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.email.message}</p>
                         )}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password" className="form-label">
+                        <label htmlFor="password" className="form-label dark:text-gray-200">
                             Password
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaLock className="h-5 w-5 text-gray-400" />
+                                <FaLock className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('password', {
@@ -129,22 +129,22 @@ const SignUp = () => {
                                 })}
                                 type="password"
                                 autoComplete="new-password"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your password"
                             />
                         </div>
                         {errors.password && (
-                            <p className="form-error">{errors.password.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.password.message}</p>
                         )}
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="confirmPassword" className="form-label">
+                        <label htmlFor="confirmPassword" className="form-label dark:text-gray-200">
                             Confirm Password
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaCheckCircle className="h-5 w-5 text-gray-400" />
+                                <FaCheckCircle className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                             </div>
                             <input
                                 {...register('confirmPassword', {
@@ -154,12 +154,12 @@ const SignUp = () => {
                                 })}
                                 type="password"
                                 autoComplete="new-password"
-                                className="input pl-10"
+                                className="input pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Confirm your password"
                             />
                         </div>
                         {errors.confirmPassword && (
-                            <p className="form-error">{errors.confirmPassword.message}</p>
+                            <p className="form-error dark:text-red-400">{errors.confirmPassword.message}</p>
                         )}
                     </div>
 
@@ -167,7 +167,7 @@ const SignUp = () => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="btn btn-primary w-full"
+                            className="btn btn-primary w-full dark:bg-primary-600 dark:hover:bg-primary-700"
                         >
                             {isSubmitting ? (
                                 <div className="flex items-center justify-center">
@@ -183,12 +183,12 @@ const SignUp = () => {
                         </button>
                     </div>
 
-                    <div className="text-center pt-2 border-t border-gray-200">
-                        <span className="text-sm text-gray-600">
+                    <div className="text-center pt-2 border-t border-gray-200 dark:border-gray-600">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             Already have an account?{' '}
                             <Link
                                 to="/signin"
-                                className="font-semibold text-gray-800 hover:text-gray-900 transition-colors underline underline-offset-2"
+                                className="font-semibold text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors underline underline-offset-2"
                             >
                                 Sign in
                             </Link>
