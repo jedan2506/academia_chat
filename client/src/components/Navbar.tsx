@@ -14,18 +14,18 @@ const Navbar: React.FC = () => {
 
     return (
         <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
+            <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+                <div className="flex justify-between h-14 md:h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0 flex items-center">
-                            <div className="bg-primary-600 text-white p-2 rounded-lg">
-                                <FaBuilding className="w-6 h-6" />
+                            <div className="bg-primary-600 text-white p-1.5 md:p-2 rounded-lg">
+                                <FaBuilding className="w-4 h-4 md:w-6 md:h-6" />
                             </div>
-                            <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">virallens</span>
+                            <span className="ml-2 text-lg md:text-xl font-bold text-gray-900 dark:text-white">virallens</span>
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3 md:space-x-4">
                         <ThemeToggle />
                         
                         <div className="hidden md:block">
@@ -37,8 +37,8 @@ const Navbar: React.FC = () => {
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
-                                <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
-                                    <span className="text-primary-600 dark:text-primary-300 font-medium">
+                                <div className="w-7 h-7 md:w-8 md:h-8 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                                    <span className="text-primary-600 dark:text-primary-300 font-medium text-sm md:text-base">
                                         {user?.name?.charAt(0).toUpperCase()}
                                     </span>
                                 </div>

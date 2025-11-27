@@ -1,28 +1,28 @@
-export const ERROR_MESSAGES = {
-    USER_NOT_AUTHENTICATED: 'User not authenticated',
-    CONVERSATION_NOT_FOUND: 'Conversation not found',
-    SERVER_ERROR: 'Server error',
-    INVALID_CREDENTIALS: 'Invalid credentials',
-    VALIDATION_FAILED: 'Validation failed',
-    INTERNAL_SERVER_ERROR: 'Internal server error',
-    USER_NOT_FOUND: 'User not found',
-    INVALID_TOKEN: 'Invalid token',
+export const errorMessages = {
+    userNotAuthenticated: 'User not authenticated',
+    conversationNotFound: 'Conversation not found',
+    serverError: 'Server error',
+    invalidCredentials: 'Invalid credentials',
+    validationFailed: 'Validation failed',
+    internalServerError: 'Internal server error',
+    userNotFound: 'User not found',
+    invalidToken: 'Invalid token',
 } as const;
 
-export const SUCCESS_MESSAGES = {
-    USER_REGISTERED: 'User registered successfully',
-    LOGIN_SUCCESSFUL: 'Login successful',
-    LOGOUT_SUCCESSFUL: 'Logout successful',
-    CONVERSATION_DELETED: 'Conversation deleted successfully',
+export const successMessages = {
+    userRegistered: 'User registered successfully',
+    loginSuccessful: 'Login successful',
+    logoutSuccessful: 'Logout successful',
+    conversationDeleted: 'Conversation deleted successfully',
 } as const;
 
-export const VALIDATION_MESSAGES = {
-    INVALID_CONVERSATION_ID: 'Invalid conversation ID',
-    TITLE_REQUIRED: 'Title cannot be empty',
-    MESSAGE_REQUIRED: 'Message cannot be empty',
-    EMAIL_REQUIRED: 'Please provide a valid email',
-    PASSWORD_MIN_LENGTH: 'Password must be at least 6 characters long',
-    PASSWORD_REQUIRED: 'Password is required',
-    INVALID_THEME: 'Invalid theme. Must be "light" or "dark"',
+export const validationMessages = {
+    invalidConversationId: 'Invalid conversation ID',
+    titleRequired: 'Title cannot be empty',
+    messageRequired: 'Message cannot be empty',
+    emailRequired: 'Please provide a valid email',
+    passwordMinLength: 'Password must be at least 6 characters long',
+    passwordRequired: 'Password is required',
+    invalidTheme: 'Invalid theme. Must be "light" or "dark"',
 } as const;
 

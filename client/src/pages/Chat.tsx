@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { chatApi } from '../utils/chatApi';
 import { Conversation, Message } from '../types/chat';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useAuth } from '../context/AuthContext';
 
 const Chat = () => {
     const { conversationId } = useParams<{ conversationId: string }>();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isStreaming, setIsStreaming] = useState(false);
@@ -124,6 +126,11 @@ const Chat = () => {
         });
     };
 
+    const getUserInitials = () => {
+        if (!user?.name) return 'U';
+        return user.name.charAt(0).toUpperCase();
+    };
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900">
@@ -166,23 +173,29 @@ const Chat = () => {
                             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div className={`flex ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[80%]`}>
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${msg.role === 'user'
+                                <div className={`hidden md:flex flex-shrink-0 w-8 h-8 rounded-full items-center justify-center text-sm font-medium ${msg.role === 'user'
                                     ? 'bg-gray-800 dark:bg-gray-700 text-white'
                                     : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200'
                                     }`}>
-                                    {msg.role === 'user' ? 'U' : 'AI'}
+                                    {msg.role === 'user' ? getUserInitials() : 'AI'}
                                 </div>
 
-                                <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user'
-                                    ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
-                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
-                                    }`}>
-                                    <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                                        {msg.content}
+                                <div className="flex-1">
+                                    <div className={`md:hidden text-xs font-medium mb-1 ${msg.role === 'user' ? 'text-right text-gray-600 dark:text-gray-400' : 'text-left text-gray-600 dark:text-gray-400'}`}>
+                                        {msg.role === 'user' ? user?.name || 'You' : 'AI Assistant'}
                                     </div>
-                                    <div className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
+                                    
+                                    <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user'
+                                        ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
+                                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
                                         }`}>
-                                        {formatTimestamp(msg.timestamp)}
+                                        <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
+                                            {msg.content}
+                                        </div>
+                                        <div className={`text-xs mt-2 ${msg.role === 'user' ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
+                                            }`}>
+                                            {formatTimestamp(msg.timestamp)}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -192,14 +205,19 @@ const Chat = () => {
 
                 {isStreaming && streamingMessage && (
                     <div className="flex justify-start">
-                        <div className="flex items-start space-x-3 max-w-[80%]">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center text-sm font-medium mr-3">
+                        <div className="flex items-start gap-3 max-w-[80%]">
+                            <div className="hidden md:flex flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 items-center justify-center text-sm font-medium">
                                 AI
                             </div>
-                            <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
-                                <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                                    {streamingMessage}
-                                    <span className="inline-block w-0.5 h-4 bg-gray-600 dark:bg-gray-400 ml-1 animate-pulse" />
+                            <div className="flex-1">
+                                <div className="md:hidden text-xs font-medium mb-1 text-left text-gray-600 dark:text-gray-400">
+                                    AI Assistant
+                                </div>
+                                <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                    <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
+                                        {streamingMessage}
+                                        <span className="inline-block w-0.5 h-4 bg-gray-600 dark:bg-gray-400 ml-1 animate-pulse" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -208,15 +226,20 @@ const Chat = () => {
 
                 {isStreaming && !streamingMessage && (
                     <div className="flex justify-start">
-                        <div className="flex items-start space-x-3">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center text-sm font-medium mr-3">
+                        <div className="flex items-start gap-3">
+                            <div className="hidden md:flex flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 items-center justify-center text-sm font-medium">
                                 AI
                             </div>
-                            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
-                                <div className="flex items-center space-x-1">
-                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                    <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="flex-1">
+                                <div className="md:hidden text-xs font-medium mb-1 text-left text-gray-600 dark:text-gray-400">
+                                    AI Assistant
+                                </div>
+                                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                    <div className="flex items-center space-x-1">
+                                        <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
+                                        <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                        <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

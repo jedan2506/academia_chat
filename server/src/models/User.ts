@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Theme, THEME_VALUES, DEFAULT_THEME } from '../constants/theme';
+import { Theme, themeValues, defaultTheme } from '../constants/theme';
 
 export interface IUser extends Document {
     name: string;
@@ -32,8 +32,8 @@ const userSchema = new Schema<IUser>({
     },
     theme: {
         type: String,
-        enum: THEME_VALUES,
-        default: DEFAULT_THEME
+        enum: themeValues,
+        default: defaultTheme
     }
 }, {
     timestamps: true

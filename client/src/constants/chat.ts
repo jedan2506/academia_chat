@@ -1,7 +1,7 @@
-export const MESSAGE_ROLE = {
-    USER: 'user',
-    ASSISTANT: 'assistant',
+export const messageRole = {
+    user: 'user',
+    assistant: 'assistant',
 } as const;
 
-export type MessageRole = typeof MESSAGE_ROLE[keyof typeof MESSAGE_ROLE];
+export type MessageRole = typeof messageRole[keyof typeof messageRole];
 

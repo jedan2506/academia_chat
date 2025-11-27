@@ -1,13 +1,13 @@
-export const THEME = {
-    LIGHT: 'light',
-    DARK: 'dark',
+export const theme = {
+    light: 'light',
+    dark: 'dark',
 } as const;
 
-export type Theme = typeof THEME[keyof typeof THEME];
+export type Theme = typeof theme[keyof typeof theme];
 
-export const DEFAULT_THEME = THEME.LIGHT;
+export const defaultTheme = theme.light;
 
-export const THEME_STORAGE_KEY = 'theme';
+export const themeStorageKey = 'theme';
 
-export const THEME_CLASS = 'dark';
+export const themeClass = 'dark';
 
