@@ -71,7 +71,9 @@ router.get('/conversations/:id',
 router.post('/conversations',
     authenticateToken,
     body('title')
-        .trim(),
+        .trim()
+        .notEmpty()
+        .withMessage('Title cannot be empty'),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
@@ -88,10 +90,7 @@ router.post('/conversations',
             });
 
             await conversation.save();
-
-            if (req.user) {
-                await invalidateUserCache(req.user.id);
-            }
+            await invalidateUserCache(req.user.id);
 
             res.status(201).json(conversation);
         } catch (error) {
@@ -105,7 +104,9 @@ router.put('/conversations/:id',
     authenticateToken,
     param('id').isMongoId().withMessage('Invalid conversation ID'),
     body('title')
-        .trim(),
+        .trim()
+        .notEmpty()
+        .withMessage('Title cannot be empty'),
     validateRequest,
     async (req: Request, res: Response) => {
         try {
@@ -125,9 +126,7 @@ router.put('/conversations/:id',
                 return res.status(404).json({ message: 'Conversation not found' });
             }
 
-            if (req.user) {
-                await invalidateUserCache(req.user.id);
-            }
+            await invalidateUserCache(req.user.id);
 
             res.json(conversation);
         } catch (error) {
@@ -157,9 +156,7 @@ router.delete('/conversations/:id',
                 return res.status(404).json({ message: 'Conversation not found' });
             }
 
-            if (req.user) {
-                await invalidateUserCache(req.user.id);
-            }
+            await invalidateUserCache(req.user.id);
 
             res.json({ message: 'Conversation deleted successfully' });
         } catch (error) {
@@ -268,9 +265,6 @@ Remember: You're helping marketers at educational institutions achieve better pe
                     conversation.lastMessageAt = new Date();
 
                     await conversation.save();
-                }
-
-                if (req.user) {
                     await invalidateUserCache(req.user.id);
                 }
 
@@ -289,10 +283,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 conversation.messages.push(aiMessage);
                 conversation.lastMessageAt = new Date();
                 await conversation.save();
-                
-                if (req.user) {
-                    await invalidateUserCache(req.user.id);
-                }
+                await invalidateUserCache(req.user.id);
                 
                 res.end();
             }

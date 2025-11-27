@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { FiSun, FiMoon } from 'react-icons/fi';
 
 const ThemeToggle: React.FC = () => {
     const { theme, toggleTheme } = useTheme();
@@ -7,15 +8,15 @@ const ThemeToggle: React.FC = () => {
     return (
         <button
             onClick={toggleTheme}
-            className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 bg-gray-300 dark:bg-primary-600"
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
             aria-label="Toggle theme"
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
-            <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                    theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
-                }`}
-            />
+            {theme === 'light' ? (
+                <FiMoon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+            ) : (
+                <FiSun className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+            )}
         </button>
     );
 };
