@@ -100,16 +100,16 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
             `}
             >
                 <div className="flex flex-col h-full">
-                    <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                    <div className="p-3 md:p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                            <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                                 Conversations
                             </h2>
                             <button
                                 onClick={onToggle}
-                                className="lg:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-30"
+                                className="lg:hidden p-1.5 md:p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-30"
                             >
-                                <FaTimes className="w-5 h-5" />
+                                <FaTimes className="w-4 h-4 md:w-5 md:h-5" />
                             </button>
                         </div>
 
