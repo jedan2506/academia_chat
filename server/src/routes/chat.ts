@@ -9,6 +9,7 @@ import { streamText } from 'ai';
 import { messageRole } from '../constants/chat';
 import { errorMessages, successMessages, validationMessages } from '../constants/messages';
 import { cacheTtl } from '../constants/cache';
+import { io } from '../index';
 
 const router = express.Router();
 const openrouter = createOpenRouter({
@@ -205,6 +206,11 @@ router.post('/conversations/:id/messages',
             conversation.messages.push(userMessage);
             conversation.lastMessageAt = new Date();
 
+            io.to(`conversation_${conversationId}`).emit('new_message', {
+                conversationId,
+                message: userMessage
+            });
+
             const aiMessages = conversation.messages
                 .filter(msg => msg.content && msg.content.trim())
                 .map(msg => ({
@@ -268,6 +274,11 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 conversation.lastMessageAt = new Date();
 
                 await conversation.save();
+
+                io.to(`conversation_${conversationId}`).emit('new_message', {
+                    conversationId,
+                    message: aiMessage
+                });
                 }
 
                 await invalidateUserCache(req.user.id);

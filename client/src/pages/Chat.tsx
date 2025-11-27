@@ -4,12 +4,14 @@ import { chatApi } from '../utils/chatApi';
 import { Conversation, Message } from '../types/chat';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import { messageRole } from '../constants/chat';
 
 const Chat = () => {
     const { conversationId } = useParams<{ conversationId: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { socket } = useSocket();
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isStreaming, setIsStreaming] = useState(false);
@@ -23,6 +25,37 @@ const Chat = () => {
             loadConversation();
         }
     }, [conversationId]);
+
+    useEffect(() => {
+        if (socket && conversationId) {
+            socket.emit('join_conversation', conversationId);
+
+            const handleNewMessage = (data: { conversationId: string; message: Message }) => {
+                if (data.conversationId === conversationId) {
+                    setConversation(prev => {
+                        if (!prev) return prev;
+                        const messageExists = prev.messages.some(
+                            msg => msg.timestamp === data.message.timestamp
+                        );
+                        if (!messageExists) {
+                            return {
+                                ...prev,
+                                messages: [...prev.messages, data.message],
+                            };
+                        }
+                        return prev;
+                    });
+                }
+            };
+
+            socket.on('new_message', handleNewMessage);
+
+            return () => {
+                socket.emit('leave_conversation', conversationId);
+                socket.off('new_message', handleNewMessage);
+            };
+        }
+    }, [socket, conversationId]);
 
     useEffect(() => {
         scrollToBottom();

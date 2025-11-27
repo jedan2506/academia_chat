@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { SocketProvider } from '@/context/SocketContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
@@ -17,9 +18,10 @@ function App() {
         <HelmetProvider>
             <ThemeProvider>
                 <AuthProvider>
-                    <Router>
-                        <ThemeSync />
-                        <ForceAuthTheme />
+                    <SocketProvider>
+                        <Router>
+                            <ThemeSync />
+                            <ForceAuthTheme />
                         <div className="App">
                             <Routes>
                                 <Route path="/signin" element={<SignIn />} />
@@ -45,7 +47,8 @@ function App() {
                                 position="top-right"
                             />
                         </div>
-                    </Router>
+                        </Router>
+                    </SocketProvider>
                 </AuthProvider>
             </ThemeProvider>
         </HelmetProvider>
