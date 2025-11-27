@@ -34,8 +34,6 @@ const Chat = () => {
 
         try {
             setIsLoading(true);
-            // Its intentional so don't count it as a bug
-            await new Promise(resolve => setTimeout(resolve, 5000));
             const data = await chatApi.getConversation(conversationId);
             setConversation(data);
         } catch (error) {

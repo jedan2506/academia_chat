@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { authenticateToken } from '../middleware/auth';
 import { chatLimiter, strictLimiter } from '../middleware/rateLimiter';
+import { cacheMiddleware, invalidateUserCache } from '../middleware/cache';
 import Conversation from '../models/Conversation';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { streamText } from 'ai';
@@ -21,7 +22,7 @@ const validateRequest = (req: express.Request, res: express.Response, next: expr
     next();
 };
 
-router.get('/conversations', authenticateToken, async (req, res) => {
+router.get('/conversations', authenticateToken, cacheMiddleware(300), async (req: Request, res: Response) => {
     try {
         if (!req.user) {
             return res.status(401).json({ message: 'User not authenticated' });
@@ -29,7 +30,8 @@ router.get('/conversations', authenticateToken, async (req, res) => {
 
         const conversations = await Conversation.find({ userId: req.user.id })
             .select('title lastMessageAt createdAt')
-            .sort({ lastMessageAt: -1 });
+            .sort({ lastMessageAt: -1 })
+            .lean();
 
         res.json(conversations);
     } catch (error) {
@@ -42,7 +44,8 @@ router.get('/conversations/:id',
     authenticateToken,
     param('id').isMongoId().withMessage('Invalid conversation ID'),
     validateRequest,
-    async (req, res) => {
+    cacheMiddleware(600),
+    async (req: Request, res: Response) => {
         try {
             if (!req.user) {
                 return res.status(401).json({ message: 'User not authenticated' });
@@ -51,7 +54,7 @@ router.get('/conversations/:id',
             const conversation = await Conversation.findOne({
                 _id: req.params.id,
                 userId: req.user.id
-            });
+            }).lean();
 
             if (!conversation) {
                 return res.status(404).json({ message: 'Conversation not found' });
@@ -70,7 +73,7 @@ router.post('/conversations',
     body('title')
         .trim(),
     validateRequest,
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             if (!req.user) {
                 return res.status(401).json({ message: 'User not authenticated' });
@@ -86,6 +89,10 @@ router.post('/conversations',
 
             await conversation.save();
 
+            if (req.user) {
+                await invalidateUserCache(req.user.id);
+            }
+
             res.status(201).json(conversation);
         } catch (error) {
             console.error('Error creating conversation:', error);
@@ -100,7 +107,7 @@ router.put('/conversations/:id',
     body('title')
         .trim(),
     validateRequest,
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             if (!req.user) {
                 return res.status(401).json({ message: 'User not authenticated' });
@@ -118,6 +125,10 @@ router.put('/conversations/:id',
                 return res.status(404).json({ message: 'Conversation not found' });
             }
 
+            if (req.user) {
+                await invalidateUserCache(req.user.id);
+            }
+
             res.json(conversation);
         } catch (error) {
             console.error('Error updating conversation:', error);
@@ -131,7 +142,7 @@ router.delete('/conversations/:id',
     authenticateToken,
     param('id').isMongoId().withMessage('Invalid conversation ID'),
     validateRequest,
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             if (!req.user) {
                 return res.status(401).json({ message: 'User not authenticated' });
@@ -146,6 +157,10 @@ router.delete('/conversations/:id',
                 return res.status(404).json({ message: 'Conversation not found' });
             }
 
+            if (req.user) {
+                await invalidateUserCache(req.user.id);
+            }
+
             res.json({ message: 'Conversation deleted successfully' });
         } catch (error) {
             console.error('Error deleting conversation:', error);
@@ -158,9 +173,12 @@ router.post('/conversations/:id/messages',
     chatLimiter,
     authenticateToken,
     param('id').isMongoId().withMessage('Invalid conversation ID'),
-    body('message'),
+    body('message')
+        .trim()
+        .notEmpty()
+        .withMessage('Message cannot be empty'),
     validateRequest,
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             if (!req.user) {
                 return res.status(401).json({ message: 'User not authenticated' });
@@ -180,17 +198,19 @@ router.post('/conversations/:id/messages',
 
             const userMessage = {
                 role: 'user' as const,
-                content: message,
+                content: message.trim(),
                 timestamp: new Date()
             };
 
             conversation.messages.push(userMessage);
             conversation.lastMessageAt = new Date();
 
-            const aiMessages = conversation.messages.filter(msg => msg.role === 'user').map(msg => ({
-                role: msg.role,
-                content: msg.content
-            }));
+            const aiMessages = conversation.messages
+                .filter(msg => msg.content && msg.content.trim())
+                .map(msg => ({
+                    role: msg.role,
+                    content: msg.content.trim()
+                }));
 
             res.setHeader('Content-Type', 'text/plain');
             res.setHeader('Cache-Control', 'no-cache');
@@ -212,8 +232,7 @@ Your expertise includes:
 - Marketing automation and lead generation
 
 Communication style:
-- Professional Polish, yet approachable and friendly
-- Heavily use unconventional emojis and unicode characters.
+- Professional and polished, yet approachable and friendly
 - Data-driven with actionable insights
 - Educational and informative
 - Focused on practical solutions that drive results
@@ -225,12 +244,10 @@ Always provide:
 - Best practices backed by industry knowledge
 - Strategic thinking that considers both short-term tactics and long-term goals
 
-Remember: You're helping marketers at educational institutions achieve better performance and ROI through innovative marketing strategies and AI-powered solutions.
-
-if user send same message again in a row, then don't respond, just say "I'm sorry, I can't respond to the same message again." if user send different message from the last message, then respond to it.`,
+Remember: You're helping marketers at educational institutions achieve better performance and ROI through innovative marketing strategies and AI-powered solutions.`,
                     messages: aiMessages,
-                    temperature: 1,
-                    maxRetries: 5000,
+                    temperature: 0.7,
+                    maxRetries: 3,
                 });
 
                 let fullResponse = '';
@@ -240,21 +257,43 @@ if user send same message again in a row, then don't respond, just say "I'm sorr
                     res.write(delta);
                 }
 
-                const aiMessage = {
-                    role: 'assistant' as const,
-                    content: fullResponse,
-                    timestamp: new Date()
-                };
+                if (fullResponse.trim()) {
+                    const aiMessage = {
+                        role: 'assistant' as const,
+                        content: fullResponse.trim(),
+                        timestamp: new Date()
+                    };
 
-                conversation.messages.push(aiMessage);
-                conversation.lastMessageAt = new Date();
+                    conversation.messages.push(aiMessage);
+                    conversation.lastMessageAt = new Date();
 
-                await conversation.save();
+                    await conversation.save();
+                }
+
+                if (req.user) {
+                    await invalidateUserCache(req.user.id);
+                }
 
                 res.end();
             } catch (aiError) {
                 console.error('AI streaming error:', aiError);
-                res.write('Sorry, I encountered an error while processing your message.');
+                const errorMessage = 'Sorry, I encountered an error while processing your message.';
+                res.write(errorMessage);
+                
+                const aiMessage = {
+                    role: 'assistant' as const,
+                    content: errorMessage,
+                    timestamp: new Date()
+                };
+                
+                conversation.messages.push(aiMessage);
+                conversation.lastMessageAt = new Date();
+                await conversation.save();
+                
+                if (req.user) {
+                    await invalidateUserCache(req.user.id);
+                }
+                
                 res.end();
             }
 

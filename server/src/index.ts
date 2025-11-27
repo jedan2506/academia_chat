@@ -15,7 +15,8 @@ const PORT = process.env.PORT;
 connectDB();
 
 app.use(cors({
-    origin: ['http://www.google.com'],
+    origin: process.env.CLIENT_URL || 'http://localhost:3100',
+    credentials: true,
 }));
 
 app.use('/api/', generalLimiter);
@@ -23,8 +24,8 @@ app.use('/api/', generalLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/auth-routes', authRoutes);
-app.use('/api/chat-routes', chatRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Server is running!', timestamp: new Date().toISOString() });

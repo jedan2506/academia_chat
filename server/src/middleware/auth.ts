@@ -11,9 +11,9 @@ declare global {
 }
 
 interface JwtPayload {
-    id: string;
-    iat: number;
-    exp: number;
+    userId: string;
+    iat?: number;
+    exp?: number;
 }
 
 export const authenticateToken = async (
@@ -37,7 +37,7 @@ export const authenticateToken = async (
 
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.userId);
         if (!user) {
             res.status(401).json({ message: 'Invalid token or user not found' });
             return;
