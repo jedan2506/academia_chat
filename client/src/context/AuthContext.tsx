@@ -8,7 +8,8 @@ type AuthAction =
     | { type: 'AUTH_SUCCESS'; payload: { user: User; token: string } }
     | { type: 'AUTH_FAILURE' }
     | { type: 'LOGOUT' }
-    | { type: 'SET_LOADING'; payload: boolean };
+    | { type: 'SET_LOADING'; payload: boolean }
+    | { type: 'UPDATE_USER'; payload: Partial<User> };
 
 const initialState: AuthState = {
     user: null,
@@ -51,6 +52,11 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
                 ...state,
                 isLoading: action.payload,
             };
+        case 'UPDATE_USER':
+            return {
+                ...state,
+                user: state.user ? { ...state.user, ...action.payload } : null,
+            };
         default:
             return state;
     }
@@ -61,6 +67,7 @@ interface AuthContextType extends AuthState {
     signup: (credentials: SignupCredentials) => Promise<boolean>;
     logout: () => void;
     checkAuth: () => Promise<void>;
+    updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -194,12 +201,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const updateUser = (updates: Partial<User>): void => {
+        dispatch({ type: 'UPDATE_USER', payload: updates });
+        if (state.user) {
+            const updatedUser = { ...state.user, ...updates };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+    };
+
     const value: AuthContextType = {
         ...state,
         signin,
         signup,
         logout,
         checkAuth,
+        updateUser,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

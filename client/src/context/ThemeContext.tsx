@@ -43,7 +43,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         setThemeState(newTheme);
         const token = localStorage.getItem('token');
         if (token) {
-            api.patch('/auth/theme', { theme: newTheme }).catch(console.error);
+            api.patch('/auth/theme', { theme: newTheme })
+                .then(() => {
+                    const userStr = localStorage.getItem('user');
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        user.theme = newTheme;
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                })
+                .catch(console.error);
         }
     };
 
