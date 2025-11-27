@@ -59,13 +59,17 @@ const Chat = () => {
         const newUserMessage: Message = {
             role: messageRole.user,
             content: userMessage,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
 
-        setConversation(prev => prev ? {
-            ...prev,
-            messages: [...prev.messages, newUserMessage]
-        } : null);
+        setConversation(prev =>
+            prev
+                ? {
+                      ...prev,
+                      messages: [...prev.messages, newUserMessage],
+                  }
+                : null
+        );
 
         try {
             const stream = await chatApi.sendMessage(conversationId, userMessage);
@@ -87,17 +91,20 @@ const Chat = () => {
             const aiMessage: Message = {
                 role: messageRole.assistant,
                 content: fullResponse,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             };
 
-            setConversation(prev => prev ? {
-                ...prev,
-                messages: [...prev.messages, aiMessage],
-                lastMessageAt: new Date().toISOString()
-            } : null);
+            setConversation(prev =>
+                prev
+                    ? {
+                          ...prev,
+                          messages: [...prev.messages, aiMessage],
+                          lastMessageAt: new Date().toISOString(),
+                      }
+                    : null
+            );
 
             setStreamingMessage('');
-
         } catch (error) {
             console.error('Error sending message:', error);
         } finally {
@@ -123,7 +130,7 @@ const Chat = () => {
     const formatTimestamp = (timestamp: string) => {
         return new Date(timestamp).toLocaleTimeString([], {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
         });
     };
 
@@ -145,8 +152,12 @@ const Chat = () => {
             <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900">
                 <div className="text-center">
                     <div className="text-gray-400 dark:text-gray-500 text-6xl mb-4">⚠️</div>
-                    <div className="text-gray-600 dark:text-gray-300 text-lg font-medium">Conversation not found</div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">This conversation may have been deleted or doesn't exist.</p>
+                    <div className="text-gray-600 dark:text-gray-300 text-lg font-medium">
+                        Conversation not found
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                        This conversation may have been deleted or doesn't exist.
+                    </p>
                 </div>
             </div>
         );
@@ -161,8 +172,12 @@ const Chat = () => {
                             <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                                 <span className="text-3xl">💬</span>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Start the conversation</h3>
-                            <p className="text-gray-600 dark:text-gray-400">Send a message to begin chatting with the marketing assistant.</p>
+                            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                                Start the conversation
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Send a message to begin chatting with the marketing assistant.
+                            </p>
                         </div>
                     </div>
                 ) : (
@@ -171,28 +186,45 @@ const Chat = () => {
                             key={index}
                             className={`flex ${msg.role === messageRole.user ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`flex ${msg.role === messageRole.user ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[80%]`}>
-                                <div className={`hidden md:flex flex-shrink-0 w-8 h-8 rounded-full items-center justify-center text-sm font-medium ${msg.role === messageRole.user
-                                    ? 'bg-gray-800 dark:bg-gray-700 text-white'
-                                    : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200'
-                                    }`}>
+                            <div
+                                className={`flex ${msg.role === messageRole.user ? 'flex-row-reverse' : 'flex-row'} items-start gap-3 max-w-[80%]`}
+                            >
+                                <div
+                                    className={`hidden md:flex flex-shrink-0 w-8 h-8 rounded-full items-center justify-center text-sm font-medium ${
+                                        msg.role === messageRole.user
+                                            ? 'bg-gray-800 dark:bg-gray-700 text-white'
+                                            : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200'
+                                    }`}
+                                >
                                     {msg.role === messageRole.user ? getUserInitials() : 'AI'}
                                 </div>
 
                                 <div className="flex-1">
-                                    <div className={`md:hidden text-xs font-medium mb-1 ${msg.role === messageRole.user ? 'text-right text-gray-600 dark:text-gray-400' : 'text-left text-gray-600 dark:text-gray-400'}`}>
-                                        {msg.role === messageRole.user ? user?.name || 'You' : 'AI Assistant'}
+                                    <div
+                                        className={`md:hidden text-xs font-medium mb-1 ${msg.role === messageRole.user ? 'text-right text-gray-600 dark:text-gray-400' : 'text-left text-gray-600 dark:text-gray-400'}`}
+                                    >
+                                        {msg.role === messageRole.user
+                                            ? user?.name || 'You'
+                                            : 'AI Assistant'}
                                     </div>
-                                    
-                                    <div className={`rounded-2xl px-4 py-3 shadow-sm ${msg.role === messageRole.user
-                                        ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
-                                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
-                                        }`}>
+
+                                    <div
+                                        className={`rounded-2xl px-4 py-3 shadow-sm ${
+                                            msg.role === messageRole.user
+                                                ? 'bg-gray-800 dark:bg-gray-700 text-white rounded-br-md'
+                                                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-bl-md'
+                                        }`}
+                                    >
                                         <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                                             {msg.content}
                                         </div>
-                                        <div className={`text-xs mt-2 ${msg.role === messageRole.user ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-400'
-                                            }`}>
+                                        <div
+                                            className={`text-xs mt-2 ${
+                                                msg.role === messageRole.user
+                                                    ? 'text-gray-300 dark:text-gray-400'
+                                                    : 'text-gray-500 dark:text-gray-400'
+                                            }`}
+                                        >
                                             {formatTimestamp(msg.timestamp)}
                                         </div>
                                     </div>
@@ -236,8 +268,14 @@ const Chat = () => {
                                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                                     <div className="flex items-center space-x-1">
                                         <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
-                                        <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                        <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                        <div
+                                            className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"
+                                            style={{ animationDelay: '0.1s' }}
+                                        ></div>
+                                        <div
+                                            className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"
+                                            style={{ animationDelay: '0.2s' }}
+                                        ></div>
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +291,7 @@ const Chat = () => {
                     <textarea
                         ref={textareaRef}
                         value={message}
-                        onChange={(e) => {
+                        onChange={e => {
                             setMessage(e.target.value);
                             adjustTextareaHeight();
                         }}

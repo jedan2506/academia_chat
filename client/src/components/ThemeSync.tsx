@@ -12,21 +12,19 @@ const ThemeSync = () => {
 
     useEffect(() => {
         if (!hasInitialized.current && isAuthenticated && user?.theme && !isAuthPage) {
-            console.log('[ThemeSync] Initial theme sync:', user.theme);
             setTheme(user.theme);
             hasInitialized.current = true;
         }
     }, [isAuthenticated, user?.theme, isAuthPage, setTheme]);
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || isAuthPage) {
             hasInitialized.current = false;
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, isAuthPage]);
 
     useEffect(() => {
         const handleThemeUpdate = (event: CustomEvent) => {
-            console.log('[ThemeSync] 📨 User theme updated to:', event.detail.theme);
             updateUser({ theme: event.detail.theme });
         };
 
