@@ -265,8 +265,9 @@ Remember: You're helping marketers at educational institutions achieve better pe
                     conversation.lastMessageAt = new Date();
 
                     await conversation.save();
-                    await invalidateUserCache(req.user.id);
                 }
+
+                await invalidateUserCache(req.user.id);
 
                 res.end();
             } catch (aiError) {
@@ -283,6 +284,7 @@ Remember: You're helping marketers at educational institutions achieve better pe
                 conversation.messages.push(aiMessage);
                 conversation.lastMessageAt = new Date();
                 await conversation.save();
+                
                 await invalidateUserCache(req.user.id);
                 
                 res.end();
