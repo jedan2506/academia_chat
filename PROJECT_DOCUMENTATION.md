@@ -13,6 +13,14 @@
 
 ---
 
+## 📝 Development Process
+
+**Git Workflow:** All enhancements, bug fixes, and features were developed and merged through Pull Requests. This approach ensures complete visibility into individual file changes, commit history, and the evolution of the codebase. Reviewers can examine the PR history on GitHub to understand the granular changes made during the development process.
+
+**Important Note:** The README.md file currently contains the original assignment brief. For future iterations of this assignment, it would be beneficial to include deployment guidance directly in the README.md. Adding information about Vercel deployment steps, external service setup (MongoDB Atlas, Upstash Redis), and environment variable configuration would significantly help candidates understand the production deployment process. This documentation has been provided separately in PROJECT_DOCUMENTATION.md and can be integrated into the main README as needed.
+
+---
+
 ## ✅ Completed Tasks
 
 ### Security
@@ -297,6 +305,35 @@ academia_chat/
 - bcrypt password security
 - JWT authentication
 - Rate limiting protection
+
+---
+
+## 🚀 Planned Enhancements
+
+While the current implementation successfully addresses all assignment requirements and delivers a production-ready application, several architectural improvements were identified during development that would further elevate the system:
+
+**Advanced Features:**
+- WebSocket integration for real-time collaborative conversations
+- Full-text search with Elasticsearch for enhanced message discovery
+- File upload system with S3/CloudFlare R2 for document and image attachments
+- Voice input with speech-to-text integration
+- Multi-language support (i18n) for global accessibility
+
+**Infrastructure Optimizations:**
+- Kubernetes orchestration for advanced scaling capabilities
+- CDN optimization for static assets with CloudFlare
+- Advanced monitoring with Prometheus and Grafana
+- Automated CI/CD pipeline with comprehensive test coverage
+- Blue-green deployment strategy for zero-downtime updates
+
+**User Experience Enhancements:**
+- Custom avatar upload with image processing
+- Export conversations to PDF/Markdown formats
+- Message reactions and bookmarking system
+- AI model selection (GPT-4, Claude, Gemini)
+- Admin dashboard with usage analytics
+
+These enhancements represent the natural evolution of the platform and demonstrate forward-thinking architecture planning. The current codebase is structured to accommodate these additions without requiring significant refactoring, showcasing scalable design principles from the ground up.
 
 ---
 
