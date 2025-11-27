@@ -105,6 +105,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, onToggle }) => {
                             <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                                 Conversations
                             </h2>
+
                             <button
                                 onClick={onToggle}
                                 className="lg:hidden p-1.5 md:p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-30"
