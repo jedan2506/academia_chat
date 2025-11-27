@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    ReactNode,
+    useCallback,
+} from 'react';
 import api from '../utils/api';
 import { theme, Theme, defaultTheme, themeClass } from '../constants/theme';
 
@@ -35,34 +42,34 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }, [currentTheme]);
 
     const setTheme = useCallback((newTheme: Theme) => {
-        console.log('[ThemeContext] setTheme called with:', newTheme);
-        console.trace('[ThemeContext] Call stack');
-        setThemeState((prevTheme) => {
-            console.log('[ThemeContext] prevTheme:', prevTheme, 'newTheme:', newTheme);
+        const root = document.documentElement;
+        if (newTheme === theme.dark) {
+            root.classList.add(themeClass);
+        } else {
+            root.classList.remove(themeClass);
+        }
+
+        setThemeState(prevTheme => {
             if (newTheme === prevTheme) {
-                console.log('[ThemeContext] Theme unchanged, returning prevTheme');
                 return prevTheme;
             }
             const token = localStorage.getItem('token');
             if (token) {
-                console.log('[ThemeContext] 🔥 CALLING API to update theme to:', newTheme);
                 api.patch('/auth/theme', { theme: newTheme })
                     .then(() => {
-                        console.log('[ThemeContext] ✅ API call succeeded');
                         const userStr = localStorage.getItem('user');
                         if (userStr) {
                             const user = JSON.parse(userStr);
                             user.theme = newTheme;
                             localStorage.setItem('user', JSON.stringify(user));
-                            console.log('[ThemeContext] 📢 Dispatching userThemeUpdated event');
-                            window.dispatchEvent(new CustomEvent('userThemeUpdated', { detail: { theme: newTheme } }));
+                            window.dispatchEvent(
+                                new CustomEvent('userThemeUpdated', { detail: { theme: newTheme } })
+                            );
                         }
                     })
-                    .catch((error) => {
-                        console.error('[ThemeContext] ❌ API call failed:', error);
+                    .catch(error => {
+                        console.error('Failed to update theme:', error);
                     });
-            } else {
-                console.log('[ThemeContext] No token, skipping API call');
             }
             return newTheme;
         });
