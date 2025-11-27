@@ -10,14 +10,16 @@ import ChatLayout from '@/pages/ChatLayout';
 import Chat from '@/pages/Chat';
 import ChatWelcome from '@/pages/ChatWelcome';
 import ThemeSync from '@/components/ThemeSync';
+import ForceAuthTheme from '@/components/ForceAuthTheme';
 
 function App() {
     return (
         <HelmetProvider>
             <ThemeProvider>
                 <AuthProvider>
-                    <ThemeSync />
                     <Router>
+                        <ThemeSync />
+                        <ForceAuthTheme />
                         <div className="App">
                             <Routes>
                                 <Route path="/signin" element={<SignIn />} />

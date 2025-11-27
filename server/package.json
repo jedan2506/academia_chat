@@ -7,7 +7,9 @@
         "dev": "nodemon src/index.ts",
         "build": "tsc",
         "start": "node build/index.js",
-        "clean": "rimraf build"
+        "clean": "rimraf build",
+        "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+        "format:check": "prettier --check \"src/**/*.{ts,js,json}\""
     },
     "dependencies": {
         "@openrouter/ai-sdk-provider": "^1.2.0",
@@ -29,6 +31,7 @@
         "@types/jsonwebtoken": "^9.0.5",
         "@types/node": "^20.8.0",
         "nodemon": "^3.0.1",
+        "prettier": "^3.1.0",
         "rimraf": "^5.0.5",
         "ts-node": "^10.9.1",
         "typescript": "^5.2.2"

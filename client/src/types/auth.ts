@@ -1,8 +1,10 @@
+import { Theme } from '../constants/theme';
+
 export interface User {
     id: string;
     name: string;
     email: string;
-    theme?: 'light' | 'dark';
+    theme?: Theme;
     createdAt: string;
 }
 

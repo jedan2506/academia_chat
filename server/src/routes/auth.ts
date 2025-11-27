@@ -4,6 +4,8 @@ import User from '../models/User';
 import { generateToken } from '../utils/jwt';
 import { authenticateToken } from '../middleware/auth';
 import { authLimiter, createAccountLimiter } from '../middleware/rateLimiter';
+import { defaultTheme, themeValues } from '../constants/theme';
+import { errorMessages, successMessages, validationMessages } from '../constants/messages';
 
 const router = Router();
 
@@ -35,7 +37,7 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
         if (!errors.isEmpty()) {
             res.status(400).json({
                 success: false,
-                message: 'Validation failed',
+                message: errorMessages.validationFailed,
                 errors: errors.array()
             });
             return;
@@ -66,13 +68,13 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
             id: user._id,
             name: user.name,
             email: user.email,
-            theme: user.theme || 'light',
+            theme: user.theme || defaultTheme,
             createdAt: user.createdAt
         };
 
         res.status(201).json({
             success: true,
-            message: 'User registered successfully',
+            message: successMessages.userRegistered,
             token,
             user: userResponse
         });
@@ -80,7 +82,7 @@ router.post('/signup', createAccountLimiter, signupValidation, async (req: Reque
         console.error('Signup error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: errorMessages.internalServerError
         });
     }
 });
@@ -92,7 +94,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
         if (!errors.isEmpty()) {
             res.status(400).json({
                 success: false,
-                message: 'Validation failed',
+                message: errorMessages.validationFailed,
                 errors: errors.array()
             });
             return;
@@ -104,7 +106,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
         if (!user) {
             res.status(401).json({
                 success: false,
-                message: 'Invalid credentials'
+                message: errorMessages.invalidCredentials
             });
             return;
         }
@@ -113,7 +115,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
         if (!isPasswordValid) {
             res.status(401).json({
                 success: false,
-                message: 'Invalid credentials'
+                message: errorMessages.invalidCredentials
             });
             return;
         }
@@ -124,13 +126,13 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
             id: user._id,
             name: user.name,
             email: user.email,
-            theme: user.theme || 'light',
+            theme: user.theme || defaultTheme,
             createdAt: user.createdAt
         };
 
         res.json({
             success: true,
-            message: 'Login successful',
+            message: successMessages.loginSuccessful,
             token,
             user: userResponse
         });
@@ -138,7 +140,7 @@ router.post('/signin', authLimiter, signinValidation, async (req: Request, res: 
         console.error('Signin error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: errorMessages.internalServerError
         });
     }
 });
@@ -149,7 +151,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
         if (!user) {
             res.status(401).json({
                 success: false,
-                message: 'User not found'
+                message: errorMessages.userNotFound
             });
             return;
         }
@@ -158,7 +160,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
             id: user._id,
             name: user.name,
             email: user.email,
-            theme: user.theme || 'light',
+            theme: user.theme || defaultTheme,
             createdAt: user.createdAt
         };
 
@@ -170,7 +172,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
         console.error('Get user error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: errorMessages.internalServerError
         });
     }
 });
@@ -179,7 +181,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response): Promis
 router.post('/logout', authenticateToken, (req: Request, res: Response): void => {
     res.json({
         success: true,
-        message: 'Logout successful'
+        message: successMessages.logoutSuccessful
     });
 });
 
@@ -189,17 +191,17 @@ router.patch('/theme', authenticateToken, async (req: Request, res: Response): P
         if (!user) {
             res.status(401).json({
                 success: false,
-                message: 'User not found'
+                message: errorMessages.userNotFound
             });
             return;
         }
 
         const { theme } = req.body;
 
-        if (!theme || !['light', 'dark'].includes(theme)) {
+        if (!theme || !themeValues.includes(theme)) {
             res.status(400).json({
                 success: false,
-                message: 'Invalid theme. Must be "light" or "dark"'
+                message: validationMessages.invalidTheme
             });
             return;
         }
@@ -213,7 +215,7 @@ router.patch('/theme', authenticateToken, async (req: Request, res: Response): P
         if (!updatedUser) {
             res.status(404).json({
                 success: false,
-                message: 'User not found'
+                message: errorMessages.userNotFound
             });
             return;
         }
@@ -226,7 +228,7 @@ router.patch('/theme', authenticateToken, async (req: Request, res: Response): P
         console.error('Update theme error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: errorMessages.internalServerError
         });
     }
 });

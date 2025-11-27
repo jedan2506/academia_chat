@@ -189,8 +189,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const logout = (): void => {
         try {
-            api.post('/auth/logout', {}).catch(() => {
-            });
+            api.post('/auth/logout', {}).catch(() => {});
         } catch (error) {
         } finally {
             localStorage.removeItem('token');
